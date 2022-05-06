@@ -4,13 +4,13 @@ import { Recommendation } from '@prisma/client';
 
 export type CreateRecommendationDataWithScore = Omit<Recommendation, "id" >;
 
-export default async function createRecommendationWithScore(howMany: number) {
+export default async function createRecommendationsWithScore(howMany: number) {
     await prisma.$executeRaw`TRUNCATE TABLE recommendations;`;
     const recommendations = [];
 
     for (let index = 0; index < howMany; index++) {
         const recommendation: CreateRecommendationDataWithScore = {
-            name: faker.lorem.word(),
+            name: faker.lorem.word(index+1),
             youtubeLink: faker.internet.url(),
             score: index
         }

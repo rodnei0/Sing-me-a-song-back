@@ -2,7 +2,7 @@ import app from '../../src/app.js';
 import supertest from 'supertest';
 import prisma from '../../src/database.js';
 import { jest } from "@jest/globals";
-import createRecommendationWithScore from '../factories/createRecommendationWithScoreFactory.js';
+import createRecommendationsWithScore from '../factories/createRecommendationsWithScoreFactory.js';
 
 describe("POST /recommendations", () => {
     afterAll(truncateRecommendations);
@@ -39,7 +39,7 @@ describe("GET /recommendations", () => {
     afterAll(disconnect);
 
     it("should return the last 10 recommendations", async () => {
-        await createRecommendationWithScore(11);
+        await createRecommendationsWithScore(11);
 
         const result = await supertest(app).get("/recommendations");
         expect(result.body.length).toBeLessThan(11)
@@ -51,7 +51,7 @@ describe("GET /recommendations/:id", () => {
     afterAll(disconnect);
 
     it("should return an object with the id provided", async () => {
-        const recommedation = await createRecommendationWithScore(1);
+        const recommedation = await createRecommendationsWithScore(1);
         const id = recommedation[0].id;
 
         const result = await supertest(app).get(`/recommendations/${id}`);
@@ -65,13 +65,23 @@ describe("GET /recommendations/random", () => {
     afterAll(disconnect);
     
     it("should return a recommendation with score > 10 70% of the time>", async () => {
-        await createRecommendationWithScore(12);
+        await createRecommendationsWithScore(12);
 
         jest.spyOn(Math, 'random').mockReturnValue(0.6);
 
         const result = await supertest(app).get("/recommendations/random");
 
-        expect(result.body.id).toBeGreaterThan(10);
+        expect(result.body.score).toBeGreaterThan(10);
+    });
+
+    it("should return a recommendation with score > -5 and <= 10 30% of the time>", async () => {
+        await createRecommendationsWithScore(12);
+
+        jest.spyOn(Math, 'random').mockReturnValue(0.8);
+
+        const result = await supertest(app).get("/recommendations/random");
+
+        expect(result.body.score).toBeLessThan(11);
     });
 });
 
@@ -80,7 +90,7 @@ describe("GET /recommendations/top/:amount", () => {
     afterAll(disconnect);
     
     it("should return the top 2 recommedations given 3 recommendations", async () => {
-        const recommedations = await createRecommendationWithScore(3);
+        const recommedations = await createRecommendationsWithScore(3);
 
         const result = await supertest(app).get("/recommendations/top/2");
 
@@ -98,7 +108,7 @@ describe("POST /recommendations/:id/upvote", () => {
     afterAll(disconnect);
     
     it("should return a recommendation with the score = 1", async () => {
-        const recommedation = await createRecommendationWithScore(1);
+        const recommedation = await createRecommendationsWithScore(1);
         const id = recommedation[0].id;
 
         const result = await supertest(app).post(`/recommendations/${id}/upvote`);
@@ -118,7 +128,7 @@ describe("POST /recommendations/:id/downvote", () => {
     afterAll(disconnect);
     
     it("should return a recommendation with the score = -1", async () => {
-        const recommedation = await createRecommendationWithScore(1);
+        const recommedation = await createRecommendationsWithScore(1);
         const id = recommedation[0].id;
 
         const result = await supertest(app).post(`/recommendations/${id}/downvote`);
