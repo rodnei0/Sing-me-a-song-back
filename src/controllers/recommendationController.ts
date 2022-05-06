@@ -16,6 +16,7 @@ async function insert(req: Request, res: Response) {
 
 async function upvote(req: Request, res: Response) {
   const { id } = req.params;
+  console.log(id);
 
   await recommendationService.upvote(+id);
 
@@ -31,6 +32,7 @@ async function downvote(req: Request, res: Response) {
 }
 
 async function random(req: Request, res: Response) {
+
   const randomRecommendation = await recommendationService.getRandom();
 
   res.send(randomRecommendation);
