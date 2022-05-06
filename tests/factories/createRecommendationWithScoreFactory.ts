@@ -1,19 +1,21 @@
 import prisma from '../../src/database.js';
 import { faker } from "@faker-js/faker";
-import { CreateRecommendationData } from '../../src/services/recommendationsService.js'
+import { Recommendation } from '@prisma/client';
 
-export default async function createRecommendation(howMany: number) {
+export type CreateRecommendationDataWithScore = Omit<Recommendation, "id" >;
+
+export default async function createRecommendationWithScore(howMany: number) {
     await prisma.$executeRaw`TRUNCATE TABLE recommendations;`;
     const recommendations = [];
 
-    for (let i = 0; i < howMany; i++) {
-        const recommendation: CreateRecommendationData = {
+    for (let index = 0; index < howMany; index++) {
+        const recommendation: CreateRecommendationDataWithScore = {
             name: faker.lorem.word(),
-            youtubeLink: faker.internet.url()
+            youtubeLink: faker.internet.url(),
+            score: index
         }
         recommendations.push(recommendation)
     }
-    
     await prisma.recommendation.createMany({
         data: recommendations
     })

@@ -41,9 +41,13 @@ async function getTop(amount: number) {
 async function getRandom() {
 
   const random = Math.random();
+  // console.log('random',random)
   const scoreFilter = getScoreFilter(random);
+  // console.log('scoreFilter',scoreFilter)
+
 
   const recommendations = await getByScore(scoreFilter);
+  // console.log('recommendations',recommendations)
   if (recommendations.length === 0) {
     throw notFoundError();
   }
@@ -59,6 +63,7 @@ async function getByScore(scoreFilter: "gt" | "lte") {
   });
 
   if (recommendations.length > 0) {
+    // console.log('recommendations dentro',recommendations);
     return recommendations;
   }
 
