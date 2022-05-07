@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from '../../src/database.js';
+import faker from "@faker-js/faker";
 import { CreateRecommendationData } from "../services/recommendationsService.js";
 
 async function create(createRecommendationData: CreateRecommendationData) {
@@ -49,7 +50,7 @@ function find(id: number) {
 }
 
 async function updateScore(id: number, operation: "increment" | "decrement") {
-  await prisma.recommendation.update({
+  return prisma.recommendation.update({
     where: { id },
     data: {
       score: { [operation]: 1 },
@@ -63,6 +64,19 @@ async function remove(id: number) {
   });
 }
 
+async function seed() {
+  await prisma.recommendation.create({
+    data: {
+      name: faker.random.word(),
+      youtubeLink: "https://www.youtube.com/watch?v=zKAAFsovtM4"
+    }
+  })
+}
+
+async function truncate() {
+  await prisma.$executeRaw`TRUNCATE TABLE recommendations;`;
+}
+
 export const recommendationRepository = {
   create,
   findAll,
@@ -70,4 +84,6 @@ export const recommendationRepository = {
   updateScore,
   getAmountByScore,
   remove,
+  truncate,
+  seed
 };

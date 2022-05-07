@@ -72,6 +72,14 @@ function getScoreFilter(random: number) {
   return "lte";
 }
 
+async function seed() {
+  await recommendationRepository.seed();
+}
+
+async function truncate() {
+  await recommendationRepository.truncate();
+}
+
 export const recommendationService = {
   insert,
   upvote,
@@ -82,4 +90,6 @@ export const recommendationService = {
   getTop,
   getByScore,
   getScoreFilter,
+  truncate,
+  seed
 };
