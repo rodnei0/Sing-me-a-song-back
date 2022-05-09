@@ -1,8 +1,8 @@
-import app from '../../src/app.js';
-import supertest from 'supertest';
-import prisma from '../../src/database.js';
+import app from "../../src/app.js";
+import supertest from "supertest";
+import prisma from "../../src/database.js";
 import { jest } from "@jest/globals";
-import createRecommendationsWithScore from '../factories/createRecommendationsWithScoreFactory.js';
+import createRecommendationsWithScore from "../factories/createRecommendationsWithScoreFactory.js";
 
 describe("POST /recommendations", () => {
     afterAll(truncateRecommendations);
@@ -17,9 +17,9 @@ describe("POST /recommendations", () => {
         const result = await supertest(app).post("/recommendations").send(body);
         const recommedation = await prisma.recommendation.findUnique({
             where: {
-              name: "Falamansa - Xote dos Milagres",
+                name: "Falamansa - Xote dos Milagres",
             },
-          });
+        });
 
         expect(result.status).toEqual(201);
         expect(recommedation).not.toBeNull();
@@ -42,7 +42,7 @@ describe("GET /recommendations", () => {
         await createRecommendationsWithScore(11);
 
         const result = await supertest(app).get("/recommendations");
-        expect(result.body.length).toBeLessThan(11)
+        expect(result.body.length).toBeLessThan(11);
     });
 });
 
@@ -67,7 +67,7 @@ describe("GET /recommendations/random", () => {
     it("should return a recommendation with score > 10 70% of the time>", async () => {
         await createRecommendationsWithScore(12);
 
-        jest.spyOn(Math, 'random').mockReturnValue(0.6);
+        jest.spyOn(Math, "random").mockReturnValue(0.6);
 
         const result = await supertest(app).get("/recommendations/random");
 
@@ -77,7 +77,7 @@ describe("GET /recommendations/random", () => {
     it("should return a recommendation with score > -5 and <= 10 30% of the time>", async () => {
         await createRecommendationsWithScore(12);
 
-        jest.spyOn(Math, 'random').mockReturnValue(0.8);
+        jest.spyOn(Math, "random").mockReturnValue(0.8);
 
         const result = await supertest(app).get("/recommendations/random");
 
@@ -114,9 +114,9 @@ describe("POST /recommendations/:id/upvote", () => {
         const result = await supertest(app).post(`/recommendations/${id}/upvote`);
         const response = await prisma.recommendation.findUnique({
             where: {
-              id: id,
+                id: id,
             },
-          });
+        });
         expect(result.status).toEqual(200);
         expect(response).not.toBeNull();
         expect(response.score).toEqual(1);
@@ -134,9 +134,9 @@ describe("POST /recommendations/:id/downvote", () => {
         const result = await supertest(app).post(`/recommendations/${id}/downvote`);
         const response = await prisma.recommendation.findUnique({
             where: {
-              id: id,
+                id: id,
             },
-          });
+        });
         expect(result.status).toEqual(200);
         expect(response).not.toBeNull();
         expect(response.score).toEqual(-1);

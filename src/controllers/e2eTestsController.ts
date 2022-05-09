@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { recommendationService } from '../services/recommendationsService.js'
+import { recommendationService } from "../services/recommendationsService.js";
 
 async function seed(req: Request, res: Response) {
     await recommendationService.seed(req.body);

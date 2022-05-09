@@ -1,6 +1,6 @@
-import prisma from '../../src/database.js';
+import prisma from "../../src/database.js";
 import { faker } from "@faker-js/faker";
-import { Recommendation } from '@prisma/client';
+import { Recommendation } from "@prisma/client";
 
 export type CreateRecommendationDataWithScore = Omit<Recommendation, "id" >;
 
@@ -13,14 +13,14 @@ export default async function createRecommendationsWithScore(howMany: number) {
             name: faker.lorem.word(index+1),
             youtubeLink: faker.internet.url(),
             score: index
-        }
-        recommendations.push(recommendation)
+        };
+        recommendations.push(recommendation);
     }
     await prisma.recommendation.createMany({
         data: recommendations
-    })
+    });
 
     const result = await prisma.recommendation.findMany();
 
-    return result
+    return result;
 }

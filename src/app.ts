@@ -12,7 +12,7 @@ app.use(express.json());
 app.use("/recommendations", recommendationRouter);
 app.use(errorHandlerMiddleware);
 
-if (process.env.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === "test") {
     app.use(e2eRouter);
 }
 
