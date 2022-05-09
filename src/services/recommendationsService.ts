@@ -72,8 +72,8 @@ function getScoreFilter(random: number) {
   return "lte";
 }
 
-async function seed() {
-  await recommendationRepository.seed();
+async function seed(data: CreateRecommendationData) {
+  await recommendationRepository.seed(data);
 }
 
 async function truncate() {

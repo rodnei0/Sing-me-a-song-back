@@ -1,6 +1,5 @@
 import { Prisma } from "@prisma/client";
 import prisma from '../../src/database.js';
-import faker from "@faker-js/faker";
 import { CreateRecommendationData } from "../services/recommendationsService.js";
 
 async function create(createRecommendationData: CreateRecommendationData) {
@@ -64,12 +63,9 @@ async function remove(id: number) {
   });
 }
 
-async function seed() {
+async function seed(data: CreateRecommendationData) {
   await prisma.recommendation.create({
-    data: {
-      name: faker.random.word(),
-      youtubeLink: "https://www.youtube.com/watch?v=zKAAFsovtM4"
-    }
+    data: data
   })
 }
 
